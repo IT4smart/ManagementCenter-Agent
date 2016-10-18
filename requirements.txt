@@ -1,0 +1,12 @@
+bmap-tools==3.2
+dblatex==0.3.7.post1
+debinterface==3.0.1
+dh-virtualenv==0.11
+freeze==1.0.10
+netifaces==0.10.5
+psutil==4.3.1
+py-cpuinfo==0.2.3
+pygpgme==0.3
+python-apt==1.1.0b1
+requests==2.11.1
+six==1.10.0

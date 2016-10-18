@@ -1,5 +1,5 @@
 # Management Agent
-Der Agent ist in Python geschrieben und ist für die Kommunikation mit der Verwaltungskonsole zuständig.
+Der Agent ist in Python geschrieben und ist fuer die Kommunikation mit der Verwaltungskonsole zustaendig.
 
 ## Systemd Service
 1. `sudo nano /lib/systemd/system/IT4S_Agent.service`
