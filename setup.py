@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='management-agent-it4s',
 	version='0.1.0',
@@ -9,6 +9,8 @@ setup(name='management-agent-it4s',
 	url='http://it4s.eu',
 	author='IT4S GmbH',
 	author_email='support@it4s.eu',
-	license='MIT',
-	packages=['management-agent-it4s'],
+	maintainer='IT4S GmbH',
+	maintainer_email='support@it4s.eu',
+	license='Commercial',
+	packages=find_packages(),
 	zip_safe=False)
