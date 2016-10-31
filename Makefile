@@ -1,2 +1,2 @@
 all:
-	sudo bash build.sh
+	bash build.sh
