@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
@@ -13,4 +12,12 @@ setup(name='management-agent-it4s',
 	maintainer_email='support@it4s.eu',
 	license='Commercial',
 	packages=find_packages(),
-	zip_safe=False)
+	include_package_data=True,
+	data_files=[('', ['agent/config.ini'])],
+	zip_safe=False,
+	entry_points={
+		'console_scripts': [
+			'management-agent-it4s = Run:main'
+		]
+	}
+)

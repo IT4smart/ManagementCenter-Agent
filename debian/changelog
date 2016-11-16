@@ -1,0 +1,5 @@
+management-agent-it4s (0.1.0) jessie; urgency=medium
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- administrator <administrator@del01-lsv003>  Mon, 07 Nov 2016 13:35:09 +0100
