@@ -145,27 +145,37 @@ def set_register_state(id, state):
     
 if __name__ == '__main__':
 
-    #set up configparser
+    # set up configparser
     dir_path = os.path.dirname(os.path.realpath(__file__))
     config = ConfigParser.ConfigParser()
+    
+    # get interface
+    n = System.System.Hardware.Network()
+
+    # get all interfaces
+    iface = n.interfaces()
+    # get information for interface which is not loopback
+    for iface2 in iface:
+        if iface2 != "lo":
+            network_interface = iface2
     
     # endless loop for running as systemd service
     while True:
         config.read(dir_path + '/config.ini')
         base_url = config.get('Main', 'protocol') + "://" + config.get('Main', 'server') + "/verwaltungskonsole/api/v1/"
         time.sleep(config.getfloat('Main', 'timeout'))
-        url = base_url + "job/" + getHwAddr('ens32')
+        url = base_url + "job/" + getHwAddr(network_interface)
         print url
         response = urllib.urlopen(url)
         data = json.loads(response.read())
         print data
         if data['command'] == 'get device state':
             time.sleep(5)
-            set_device_state(getHwAddr('ens32'),  data['idcommand_jobs'])
+            set_device_state(getHwAddr(network_interface),  data['idcommand_jobs'])
         elif data['command'] == 'get uptime':
             time.sleep(5)
             print 'System uptime of %d seconds' % (uptime())
-            set_device_uptime(getHwAddr('ens32'),  data['idcommand_jobs'])
+            set_device_uptime(getHwAddr(network_interface),  data['idcommand_jobs'])
         elif data['command'] == 'sudo reboot':
             time.sleep(5)
             set_device_reboot(data['idcommand_jobs'])
@@ -174,20 +184,20 @@ if __name__ == '__main__':
             set_device_shutdown(data['idcommand_jobs'])            
         elif data['command'] == 'get_package_data':
             time.sleep(5)
-            set_device_packages(getHwAddr('ens32'),  data['idcommand_jobs'])
+            set_device_packages(getHwAddr(network_interface),  data['idcommand_jobs'])
         elif data['command'] == 'get_device_data':
             time.sleep(5)
-            set_device_data(getHwAddr('ens32'),  data['idcommand_jobs'])
+            set_device_data(getHwAddr(network_interface),  data['idcommand_jobs'])
         elif config.get('Client', 'registered') == '0':
             # Client is not registered at the management software
             time.sleep(5)
-            register_device(getHwAddr('ens32'), hostname())
+            register_device(getHwAddr(network_interface), hostname())
             config.set('Client', 'registered', '1')
             save_config(config)
         # add support to look if device get registered or any error occured.
         elif config.get('Client', 'registered') == '1':
             time.sleep(5)
-            data = get_register_state(getHwAddr('ens32'))
+            data = get_register_state(getHwAddr(network_interface))
             
             # job is waiting for response
             if data[0]['state'] == 'wait_resp':

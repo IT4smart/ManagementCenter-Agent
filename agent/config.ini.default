@@ -4,5 +4,5 @@ server = 192.168.178.39
 timeout = 5
 
 [Client]
-registered = 2
+registered = 0
 
