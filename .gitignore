@@ -1,2 +1,16 @@
+# Compiled python modules
 *.pyc
+
 tests/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+/*.egg
+
+# debian package build files
+debian/debhelper-build-stamp
+debian/files
+debian/management-agent-it4s.debhelper.log
+debian/management-agent-it4s.postinst.debhelper
+debian/management-agent-it4s.substvars
+debian/management-agent-it4s/*

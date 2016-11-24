@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(name='management-agent-it4s',
 	version='0.1.0',
-	description='Agent to communicate with IT4S Management server.',
+	description='Agent to communicate with IT4S management server.',
 	url='http://it4s.eu',
 	author='IT4S GmbH',
 	author_email='support@it4s.eu',
@@ -13,11 +13,10 @@ setup(name='management-agent-it4s',
 	license='Commercial',
 	packages=find_packages(),
 	include_package_data=True,
-	data_files=[('', ['agent/config.ini'])],
 	zip_safe=False,
 	entry_points={
 		'console_scripts': [
-			'management-agent-it4s = Run:main'
+			'management-agent-it4s = agent:Run'
 		]
 	}
 )

@@ -40,8 +40,8 @@ def shutdown():
 def hostname():
     return platform.node()
 
-def save_config(config):
-    with open('config.ini', 'wb') as configfile:
+def save_config(path, config):
+    with open(path + '/config.ini', 'wb') as configfile:
         config.write(configfile)
     
 ##################################################################
@@ -202,7 +202,7 @@ if __name__ == '__main__':
             # job is waiting for response
             if data[0]['state'] == 'wait_resp':
                 config.set('Client', 'registered', '2')
-                save_config(config)
+                save_config(dir_path, config)
                 set_register_state(data[0]['iddevice_registering_jobs'], 'done')
         else:
             print 'No jobs found'
