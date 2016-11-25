@@ -8,6 +8,7 @@ set -e
 case "$1" in
 	configure)
 		# download package python-apt
+        # check before if files exists from package python-apt
         if [ ! "$(ls -A /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/apt)" ] || [ ! "$(ls -A /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/aptsources)" ]
         then
             apt-get download -d python-apt
@@ -24,10 +25,13 @@ case "$1" in
         fi
             
 		# copy default config if it doesn't exist
-		if [ -e "/usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default" ]; then
-			cp /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini
-		fi
-
+        if [ ! -f "/usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini" ]
+	then
+            if [ -e "/usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default" ]; then
+                cp /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini
+            fi
+        fi
+            
 	;;
 	
 	abort-upgrade|abort-remove|abort-deconfigure)
