@@ -2,7 +2,7 @@ Source: management-agent-it4s
 Section: python
 Priority: extra
 Maintainer: IT4S GmbH <support@it4s.eu>
-Build-Depends: debhelper (>= 9), python, dh-virtualenv (>= 0.8)
+Build-Depends: debhelper (>= 9), dh-systemd (>= 1.5), python, dh-virtualenv (>= 0.8)
 Standards-Version: 3.9.5
 
 Package: management-agent-it4s

@@ -11,6 +11,6 @@ tests/
 debian/debhelper-build-stamp
 debian/files
 debian/management-agent-it4s.debhelper.log
-debian/management-agent-it4s.postinst.debhelper
+debian/management-agent-it4s.*debhelper
 debian/management-agent-it4s.substvars
 debian/management-agent-it4s/*
