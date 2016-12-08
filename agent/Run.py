@@ -162,13 +162,18 @@ if __name__ == '__main__':
     # endless loop for running as systemd service
     while True:
         config.read(dir_path + '/config.ini')
-        base_url = config.get('Main', 'protocol') + "://" + config.get('Main', 'server') + "/verwaltungskonsole/api/v1/"
+        base_url = config.get('Main', 'protocol') + "://" + config.get('Main', 'server') + "/api/v1/"
         time.sleep(config.getfloat('Main', 'timeout'))
-        url = base_url + "job/" + getHwAddr(network_interface)
-        print url
-        response = urllib.urlopen(url)
-        data = json.loads(response.read())
-        print data
+        
+        # only check for jobs if device is registered
+        if config.get('Client', 'registered') == 2:
+            url = base_url + "job/" + getHwAddr(network_interface)
+            print url
+            response = urllib.urlopen(url)
+            data = json.loads(response.read())
+            print data
+            
+            
         if data['command'] == 'get device state':
             time.sleep(5)
             set_device_state(getHwAddr(network_interface),  data['idcommand_jobs'])
@@ -193,7 +198,7 @@ if __name__ == '__main__':
             time.sleep(5)
             register_device(getHwAddr(network_interface), hostname())
             config.set('Client', 'registered', '1')
-            save_config(config)
+            save_config(dir_path, config)
         # add support to look if device get registered or any error occured.
         elif config.get('Client', 'registered') == '1':
             time.sleep(5)

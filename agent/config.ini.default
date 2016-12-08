@@ -1,6 +1,6 @@
 [Main]
 protocol = http
-server = 192.168.178.39
+server = dele01-lwv001/Verwaltungskonsole
 timeout = 5
 
 [Client]
