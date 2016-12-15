@@ -1,1 +1,2 @@
 include agent/config.ini.default
+include agent/logging_config.ini
