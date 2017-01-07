@@ -284,7 +284,7 @@ if __name__ == '__main__':
                 log.info('Device shutdown')
                 time.sleep(5)
                 set_device_shutdown(data['idcommand_jobs'])            
-            elif data['command'] == 'get_package_data:
+            elif data['command'] == 'get_package_data':
                 # logging
                 log.info('Device get package data')
                 time.sleep(5)
