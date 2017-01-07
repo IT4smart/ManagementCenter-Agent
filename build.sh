@@ -15,9 +15,14 @@ fi
 # active virtual environment
 source $HOME/virt-example/bin/active
 
-cd $BASEDIR
-pip install -U pip
-pip install -U setuptools
+# check if we are in the virtual environment
+INVENV=$(python -c 'import sys; print ("1" if hasattr(sys, "real_prefix") else "0")')
 
-# package all files
-#dpkg-buildpackage -us -uc
+if [ "${INVENV}" = 1 ] ; then
+    cd $BASEDIR
+    pip install -U pip
+    pip install -U setuptools
+
+    # package all files
+    #dpkg-buildpackage -us -uc
+fi

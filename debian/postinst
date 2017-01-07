@@ -9,7 +9,7 @@ case "$1" in
 	configure)
 		# download package python-apt
         # check before if files exists from package python-apt
-        if [ ! "$(ls -A /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/apt)" ] || [ ! "$(ls -A /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/aptsources)" ]
+        if [ ! "$(ls -A /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/apt)" ] || [ ! "$(ls -A /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/aptsources)" ]
         then
             apt-get download -d python-apt
             pkg=$(ls . | grep python-apt)
@@ -20,15 +20,15 @@ case "$1" in
                 # move package to tmp folder and extract it
                 mv "$pkg" /tmp/
                 dpkg -x "/tmp/$pkg" "/tmp/python-apt"
-                mv /tmp/python-apt/usr/lib/python2.7/dist-packages/* /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/
+                mv /tmp/python-apt/usr/lib/python2.7/dist-packages/* /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/
             fi
         fi
             
 		# copy default config if it doesn't exist
-        if [ ! -f "/usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini" ]
+        if [ ! -f "/opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini" ]
 	then
-            if [ -e "/usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default" ]; then
-                cp /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini
+            if [ -e "/opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default" ]; then
+                cp /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini
             fi
         fi
             

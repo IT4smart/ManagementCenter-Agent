@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service] 
 Type=idle 
-ExecStart=/usr/share/python/management-agent-it4s/bin/python2 /usr/share/python/management-agent-it4s/lib/python2.7/site-packages/agent/Run.py
+ExecStart=/opt/IT4S/management-agent-it4s/bin/python2 /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/Run.py
 
 [Install] 
 WantedBy=multi-user.target

@@ -109,8 +109,8 @@ def set_device_packages(mac, id):
     # logging
     log.debug('URL to post device package data: %s', url)
     
-    p = Packages.Packages()
-    p_result = p.get_installed_packages(mac, id)
+    p = Packages.Packages(mac, id)
+    p_result = p.get_installed_packages()
     
     response = requests.post(url, data=p_result, headers={'Content-Type': 'application/json'})
     
