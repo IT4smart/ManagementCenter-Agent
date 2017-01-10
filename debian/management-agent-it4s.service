@@ -2,9 +2,10 @@
 Description=IT4S Agent 
 After=multi-user.target
 
-[Service] 
+[Service]
+Restart=always
 Type=idle 
-ExecStart=/opt/IT4S/management-agent-it4s/bin/python2 /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/Run.py
+ExecStart=/opt/IT4S/management-agent-it4s/bin/python /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/Run.py
 
 [Install] 
 WantedBy=multi-user.target
