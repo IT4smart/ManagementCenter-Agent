@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='management-agent-it4s',
-	version='0.1.0',
+	version='0.1.1',
 	description='Agent to communicate with IT4S management server.',
 	url='http://it4s.eu',
 	author='IT4S GmbH',
