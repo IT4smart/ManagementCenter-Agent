@@ -21,4 +21,5 @@ Wenn die Chroot - Umgebung erfolgreich geladen wurde, muss ins Terminal der folg
 
 Im Anschluss daran wird in das Verzeichnis '/tmp' gewechselt. Dort muss die virtuelle Umgebung für Python aktiviert werden. Dies geschiet durch den Befehl ``source virt-example/bin/activate``.
 
-Nun wechseln wir in das Verzeichnis in dem die Quellen liegen. Das Verzeichnis heißt 'Verwaltungskonsole-Agent'. Dort wird dann der Befehl ``dpkg-buildpackage -us -uc`` eingegeben und ausgeführt.
+Nun wechseln wir in das Verzeichnis in dem die Quellen liegen. Das Verzeichnis heißt 'Verwaltungskonsole-Agent'. Zuerst wird immer das aktuelle Changelog generiert mit dem Befehl ``./changelog > debian/changelog``. 
+Im Anschluss wird dann der Befehl ``dpkg-buildpackage -us -uc`` eingegeben und ausgeführt um das Debianpaket zu erstellen.
