@@ -1,5 +1,5 @@
 # Management Agent
-Der Agent ist in Python geschrieben und ist fuer die Kommunikation mit der Verwaltungskonsole zustaendig.
+The agent is writing in python and it is responsible for the communication with the management console.
 
 
 ## Build dependencies
@@ -11,28 +11,29 @@ Der Agent ist in Python geschrieben und ist fuer die Kommunikation mit der Verwa
 
 
 ## Release
-Die Versionierung des Management-Agent folgt der "Semantic Versioning" (http://semver.org/).
+The versioning of the management agent follows the "Semantic Versioning" (http://semver.org/).
 
-Um ein Release zu erstellen wird in der Datei 'setup.py' die Versionsnummer im Feld 'Version' erhöht. Daraufhin wird ein 'Commit' erstellt mit dem Text 'bump to <Version>'.
-Dieser 'Commit' ist dann zu pushen. Im Anschluss muss der Hash des 'Commits' herausgefunden werden, denn wir hängen ein Tag an dieses 'Commit'.
+To create a Release, the version number in the field 'Version' in the file 'setup.py' will be raised. As a result, a 'Commit' will be created with the text 'bump to <Version>'.
+This 'Commit' is then to be pushed. After that, the hash of the 'Commits' must be found, then we will hang a tag on this 'Commit'.
 
-Um das ganze zu taggen verwenden wir den folgenden Befehl ``git tag <version> <commit hash>``. Zum Schluss pushen wir diesen noch mit dem Befehl ``git push origin <version>``.
+To tag it all, we use the following command ``git tag <version> <commit hash>``. Finally, we push this with the command` `git push origin <version>``.
 
 
-## Paketbau
-Aus den quellen kann mithilfe eines Chroot für jede beliebige Architektur ein Paket gebaut werden. Dazu muss das GIT-Repository 'BuildSystemRPi' heruntergeladen werden. 
-Hier ist in den Ordner 'packages/management-agent' zu wechseln.
+## Packet building
+From the sources, a chroot can help building a packet for any architecture. To do that, the GIT-Repository 'BuildSystemRPi' must be downloaded. 
+That has to be changed here in the folder 'packages/management-agent'.
 
-Dort ist dann in das Terminal der folgende Befehl einzugeben ``make <architecture>``. Zur Zeit stehen die folgenden Architekturen zur Verfügung:
+Then, enter the following command in the terminal ``make <architecture>``. Currently, the following architectures are supported:
 * ARMHF (ARM HardFloat)
-* AMD64 (64-bit Architektur, kein ARM 64-bit)
-* i686 (32-bit Architektur)
+* AMD64 (64-bit Architecture, not ARM 64-bit)
+* i686 (32-bit Architecture)
 
-Wenn die Chroot - Umgebung erfolgreich geladen wurde, muss ins Terminal der folgende Befehl eingegeben werden ``export DH_VIRTUALENV_INSTALL_ROOT=/opt/IT4S``.
+When the chroot – environment was successfully loaded, the following command must be entered in the terminal ``export DH_VIRTUALENV_INSTALL_ROOT=/opt/IT4S``.
 
-Im Anschluss daran wird in das Verzeichnis '/tmp' gewechselt. Dort muss die virtuelle Umgebung für Python aktiviert werden. Dies geschiet durch den Befehl ``source virt-example/bin/activate``.
+Afterwards, changes will occur in the directory '/tmp’. The virtual environment for Python must be activated. To do that, we use the command ``source virt-example/bin/activate``.
 
-Nun wechseln wir in das Verzeichnis in dem die Quellen liegen. Das Verzeichnis heißt 'Verwaltungskonsole-Agent'. Zunächst wechseln wir zum "commit" des aktuellsten Tags ``git checkout $(git describe --tags `git rev-list --tags --max-count=1`)``.
+Now, we change the location of the sources in the directory. The directory is named 'Managementconsole-Agent'. First of all, we change to the "commit" of the most recent tags ``git checkout $(git describe --tags `git rev-list --tags --max-count=1`)``.
 
-Anschließend wird immer das aktuelle Changelog generiert mit dem Befehl ``./changelog > debian/changelog``. 
-Im Anschluss wird dann der Befehl ``dpkg-buildpackage -us -uc`` eingegeben und ausgeführt um das Debianpaket zu erstellen.
+Subsenquently, the current Changelog will be always generated with the command ``./changelog > debian/changelog``. 
+After that, the command ``dpkg-buildpackage -us -uc`` is to be entered and executed by the Debian packet to create.
+
