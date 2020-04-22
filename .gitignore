@@ -14,3 +14,5 @@ debian/management-agent-it4s.debhelper.log
 debian/management-agent-it4s.*debhelper
 debian/management-agent-it4s.substvars
 debian/management-agent-it4s/*
+
+config.ini

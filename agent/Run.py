@@ -4,13 +4,13 @@ import urllib, json, requests
 import time
 import psutil, os, platform
 import fcntl, socket, struct
-import ConfigParser
+import configparser
 import logging 
 from logging.config import fileConfig
 import logging.handlers 
 
-# custom IT4S packages
-from plugins import Packages
+# custom IT4smart packages
+#from plugins import Packages
 from plugins import System
 
 
@@ -18,8 +18,9 @@ from plugins import System
 # get mac address
 def getHwAddr(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
-    return ':'.join(['%02x' % ord(char) for char in info[18:24]])
+    info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', bytes(ifname, 'utf-8')[:15]))
+    return ':'.join('%02x' % b for b in info[18:24])
+
 
 # get ip address
 def get_ip_address(ifname):
@@ -27,7 +28,7 @@ def get_ip_address(ifname):
     return socket.inet_ntoa(fcntl.ioctl(
         s.fileno(),
         0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname[:15])
+        struct.pack('256s', bytes(ifname,'utf-8')[:15])
     )[20:24])
 
 # get system uptime
@@ -80,7 +81,7 @@ def set_device_state(mac, id):
     log.debug('URL to post result: %s', url)
     
     response = urllib.urlopen(url)
-    print json.loads(response.read())
+    print(json.loads(response.read()))
     
 # reboot system
 def set_device_reboot(id):
@@ -180,7 +181,7 @@ def register_device(mac, hostname):
     log.debug('Register device at management point: %s', url)
     
     response = urllib.urlopen(url)
-    print json.loads(response.read())
+    print(json.loads(response.read()))
     
 def get_register_state(mac):
     url = base_url + "device_register_state/" + str(mac)
@@ -199,18 +200,18 @@ def set_register_state(id, state):
     log.debug('Send response to api: %s', url)
     
     response = urllib.urlopen(url)
-    print json.loads(response.read())
+    print(json.loads(response.read()))
     
 if __name__ == '__main__':
 
     # setup the enviroment
     # set up configparser
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
 
     # init logging
     fileConfig(dir_path + '/logging_config.ini')
-    log = logging.getLogger('management-agent-it4s')
+    log = logging.getLogger('management-agent-it4smart')
 
     # start logging
     log.info('Start logging')
@@ -244,102 +245,41 @@ if __name__ == '__main__':
         time.sleep(config.getfloat('Main', 'timeout'))
         
         # logging
-        log.debug('Client register state: %s', config.get('Client', 'registered'))
+        log.debug('Client firstboot state: %s', config.get('Client', 'firstboot'))
         
         # only check for jobs if device is registered
-        if int(config.get('Client', 'registered')) == 2:
-            # logging
-            log.debug('Device is registered and requesting for jobs')
-            
-            url = base_url + "job/" + getHwAddr(network_interface)
-            
-            # logging
-            log.debug('Getting jobs from: %s', url)
-            
-            response = urllib.urlopen(url)
-            data = json.loads(response.read())
-            
-            # logging
-            log.debug('Response from requestings jobs: %s', data)
-            
-            # handle jobs
-            if data['command'] == 'get device state':
-                log.info('get device state')
-                time.sleep(5)
-                set_device_state(getHwAddr(network_interface),  data['idcommand_jobs'])
-            elif data['command'] == 'get uptime':
+        if int(config.get('Client', 'firstboot')) == 0:
+            try:
                 # logging
-                log.info('get device uptime')
-                time.sleep(5)
+                log.debug('Device is in firstboot mode')
+
+                url = base_url + "device/" + getHwAddr(network_interface)
+
+                json_data = {}
+                json_data['ipAddress'] = get_ip_address(network_interface)
+
+                r = requests.put(url, json=json_data, headers={'Content-Type': 'application/json'}, verify=False)
+
+                if r.status_code == 200:
+                    log.info("Update device information successfully.")
+
+                url = base_url + "device/" + getHwAddr(network_interface) + "/configure"
+
                 # logging
-                log.debug('System uptime of %d seconds', uptime())
-                set_device_uptime(getHwAddr(network_interface),  data['idcommand_jobs'])
-            elif data['command'] == 'sudo reboot':
-                # logging
-                log.info('Device reboot')
-                time.sleep(5)
-                set_device_reboot(data['idcommand_jobs'])
-            elif data['command'] == 'shutdown':
-                # logging
-                log.info('Device shutdown')
-                time.sleep(5)
-                set_device_shutdown(data['idcommand_jobs'])            
-            elif data['command'] == 'get_package_data':
-                # logging
-                log.info('Device get package data')
-                time.sleep(5)
-                set_device_packages(getHwAddr(network_interface),  data['idcommand_jobs'])
-            elif data['command'] == 'get_device_data':
-                # logging
-                log.info('Get device data')
-                time.sleep(5)
-                set_device_data(getHwAddr(network_interface),  data['idcommand_jobs'])
-            else:
-                log.info('No jobs found')
+                log.debug('Start configure device with request: %s', url)
             
-        # add support to look if device get registered or any error occured.
-        elif config.get('Client', 'registered') == '1':
-            #logging
-            log.info('Device will be added to the system')
+                r = requests.put(url, verify=False)
+                            
+                if r.status_code == 202:
+                    data = r.json()
             
-            # wait 5 seconds
-            time.sleep(5)
-            
-            data = get_register_state(getHwAddr(network_interface))
-            
-            # job is waiting for response
-            if data[0]['state'] == 'wait_resp':
-                # logging
-                log.debug('Device is queued for registering and is waiting for a response from this client')
-                
-                # set client as registered
-                config.set('Client', 'registered', '2')
-                save_config(dir_path, config)
-                
-                # send response to api that we saved the current state
-                log.debug('Send response to api that we saved the current state')
-                set_register_state(data[0]['iddevice_registering_jobs'], 'done')
-                
-                # logging
-                log.info('Device is now registered at management console')
-        elif config.get('Client', 'registered') == '0':
-            # Client is not registered at the management software
-            # logging
-            log.info('Device is not registered. Start registering it...')
-            
-            time.sleep(5)
-            
-            # logging
-            log.debug('Data for registering. Hostname: %s, MAC: %s', hostname(), getHwAddr(network_interface))
-            register_device(getHwAddr(network_interface), hostname())
-            
-            # logging 
-            log.debug('Set setting Client\registered to 1')
-            config.set('Client', 'registered', '1')
-            
-            # logging
-            log.debug('Save the config.')
-            save_config(dir_path, config)
+                    # logging
+                    log.debug('Response from requestings jobs: %s', data)
+
+                    config.set('Client', 'firstboot', '1')
+                    config_save(dir_path,config)
+            except requests.exceptions.RequestException as e:
+                log.error("Error [%s]", e)
         else:
             log.debug('Nothing to do')
             

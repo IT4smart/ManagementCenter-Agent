@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "Python",
+            "env": {
+                "BASE_URL": "https://sherlock.local",
+                "TIMEOUT": "5",
+            },
+            "program": "${workspaceFolder}/agent/Run.py"
+        }
+    ]
+}

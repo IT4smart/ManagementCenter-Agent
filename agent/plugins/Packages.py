@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import apt, json
 import os
 
 class Packages(object):
 
     def __init__(self, mac, id):
-        print "Init package module"
+        print("Init package module")
         self.id = id
         self.mac = mac
 
