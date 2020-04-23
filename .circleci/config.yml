@@ -6,12 +6,11 @@ orbs:
 jobs:
   test-style:
     executor: flake8/default
-      parameters:
-        python-version: "3.8"
-        debian-release: "buster"
     steps:
       - checkout
-      - flake8/install
+      - flake8/install:
+          python-version: "3.8"
+          debian-release: "buster"
       - run:
           name: Flake8
           command: flake8 agent/
