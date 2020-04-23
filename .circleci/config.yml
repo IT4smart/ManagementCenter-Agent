@@ -2,15 +2,13 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-  flake8: plushcare/flake8@1.0.0
 jobs:
   test-style:
-    executor: flake8/default
+    docker:
+      - image: alpine/flake8:3.7.9
+    working_directory: ~/repo
     steps:
       - checkout
-      - flake8/install:
-          python-version: "3.8"
-          debian-release: "buster"
       - run:
           name: Flake8
           command: flake8 agent/
@@ -28,4 +26,5 @@ jobs:
 workflows:
   main:
     jobs:
-      - build-and-test
+      - test-style
+
