@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
-import urllib, json, requests
+import json
+import requests
 import time
-import psutil, os, platform
-import fcntl, socket, struct
+import psutil
+import os
+import platform
+import fcntl
+import socket
+import struct
 import configparser
-import logging 
+import logging
 from logging.config import fileConfig
-import logging.handlers 
+import logging.handlers
 
 # custom IT4smart packages
-#from plugins import Packages
+# from plugins import Packages
 from plugins import System
-
 
 
 # get mac address
