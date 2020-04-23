@@ -2,8 +2,19 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-
+  flake8: plushcare/flake8@3.7.6
 jobs:
+  test-style:
+    executor: flake8/default
+      parameters:
+        python-version: "3.8"
+        debian-release: "buster"
+    steps:
+      - checkout
+      - flake8/install
+      - run:
+          name: Flake8
+          command: flake8 agent/
   build-and-test:
     executor: python/default
     steps:
