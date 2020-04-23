@@ -277,7 +277,7 @@ if __name__ == '__main__':
                     log.debug('Response from requestings jobs: %s', data)
 
                     config.set('Client', 'firstboot', '1')
-                    config_save(dir_path,config)
+                    save_config(dir_path,config)
             except requests.exceptions.RequestException as e:
                 log.error("Error [%s]", e)
         else:
