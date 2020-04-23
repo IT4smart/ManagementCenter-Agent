@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-  flake8: plushcare/flake8@3.7.6
+  flake8: plushcare/flake8@1.0.0
 jobs:
   test-style:
     executor: flake8/default
