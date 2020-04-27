@@ -19,7 +19,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
+          command: apt-get update && apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
       - python/load-cache
       - python/install-deps
       - python/save-cache
