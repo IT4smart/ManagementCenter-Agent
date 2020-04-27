@@ -10,7 +10,6 @@ import cpuinfo
 
 class System:
     class Process(object):
-
         @staticmethod
         def pids():
             return psutil.pids()
@@ -87,12 +86,11 @@ class System:
             return psutil.test()
 
     class Sessions(object):
-
         @staticmethod
         def user_name():
             arr = []
             for user in psutil.users():
-                if str(user[0]) is not 'None' and user[0] not in arr:
+                if str(user[0]) != "None" and user[0] not in arr:
                     arr.append(user[0])
             return arr
 
@@ -101,7 +99,6 @@ class System:
             return psutil.users()
 
     class Os(object):
-
         @staticmethod
         def boot_time():
             return psutil.boot_time()
@@ -143,9 +140,7 @@ class System:
             return platform.node()
 
     class Hardware(object):
-
         class Memory(object):
-
             @staticmethod
             def total():
                 return int(int(psutil.virtual_memory()[0]) / (1024 * 1024))
@@ -167,29 +162,27 @@ class System:
                 return int(int(psutil.virtual_memory()[4]) / (1024 * 1024))
 
         class Disk(object):
-
             @staticmethod
             def total():
-                return int(int(psutil.disk_usage('/')[0]) / (1024 * 1024))
+                return int(int(psutil.disk_usage("/")[0]) / (1024 * 1024))
 
             @staticmethod
             def used():
-                return int(int(psutil.disk_usage('/')[1]) / (1024 * 1024))
+                return int(int(psutil.disk_usage("/")[1]) / (1024 * 1024))
 
             @staticmethod
             def free():
-                return int(int(psutil.disk_usage('/')[2]) / (1024 * 1024))
+                return int(int(psutil.disk_usage("/")[2]) / (1024 * 1024))
 
             @staticmethod
             def percent():
-                return psutil.disk_usage('/')[3]
+                return psutil.disk_usage("/")[3]
 
             @staticmethod
             def partitions():
                 return psutil.disk_partitions()
 
         class Network(object):
-
             @staticmethod
             def interface_size():
                 return len(psutil.net_io_counters(pernic=True))
@@ -215,7 +208,7 @@ class System:
                 for iface in psutil.net_io_counters(pernic=True):
                     arr.append(psutil.net_if_addrs()[str(iface)][0][1])
                 return arr
-                
+
             @staticmethod
             def interface_details(iface):
                 arr = []
@@ -224,22 +217,21 @@ class System:
                     if nic == iface:
                         st = stats[nic]
                         arr.append(st.speed)
-                        #print ("Speed: %sMB" % (st.speed))
+                        # print ("Speed: %sMB" % (st.speed))
                         for x in addrs:
                             if x.family == 2:
                                 arr.append(x.address)
                                 arr.append(x.netmask)
                                 arr.append(x.broadcast)
-                                #print ("IP: %s" % (x.address))
-                                #print ("Netmask: %s" % (x.netmask))
-                                #print ("Broadcast: %s" % (x.broadcast))
+                                # print ("IP: %s" % (x.address))
+                                # print ("Netmask: %s" % (x.netmask))
+                                # print ("Broadcast: %s" % (x.broadcast))
                             if x.family == 17:
                                 arr.append(x.address)
-                                #print ("MAC: %s" % (x.address))
+                                # print ("MAC: %s" % (x.address))
                 return arr
 
         class Cpu(object):
-
             @staticmethod
             def physical_core_count():
                 return psutil.cpu_count(logical=False)
@@ -259,18 +251,18 @@ class System:
             @staticmethod
             def architecture():
                 return platform.processor()
-                
+
             @staticmethod
             def vendor_id():
                 info = cpuinfo.get_cpu_info()
-                return info['vendor_id']
-                
+                return info["vendor_id"]
+
             @staticmethod
             def brand():
                 info = cpuinfo.get_cpu_info()
-                return info['brand']
-                
+                return info["brand"]
+
             @staticmethod
             def hz_advertised():
                 info = cpuinfo.get_cpu_info()
-                return info['hz_advertised']
+                return info["hz_advertised"]

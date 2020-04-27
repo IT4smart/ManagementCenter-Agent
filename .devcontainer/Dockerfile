@@ -18,7 +18,7 @@ FROM python:3.8.2-slim-buster
 #
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends python3-dev gcc python3-apt \
+    && apt-get -y install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*

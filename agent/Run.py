@@ -15,198 +15,226 @@ from logging.config import fileConfig
 import logging.handlers
 
 # custom IT4smart packages
-# from plugins import Packages
-from plugins import System
+from .plugins import Packages
+from .plugins import System
 
 
 # get mac address
 def getHwAddr(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', bytes(ifname, 'utf-8')[:15]))
-    return ':'.join('%02x' % b for b in info[18:24])
+    info = fcntl.ioctl(
+        s.fileno(), 0x8927, struct.pack("256s", bytes(ifname, "utf-8")[:15])
+    )
+    return ":".join("%02x" % b for b in info[18:24])
 
 
 # get ip address
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', bytes(ifname,'utf-8')[:15])
-    )[20:24])
+    return socket.inet_ntoa(
+        fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack("256s", bytes(ifname, "utf-8")[:15]),
+        )[20:24]
+    )
+
 
 # get system uptime
 def uptime():
     return time.time() - psutil.boot_time()
 
+
 # reboot system
 def reboot():
     # logging
-    log.debug('Reboot device')
-    
-    os.system('sudo reboot')
-    
+    log.debug("Reboot device")
+
+    os.system("sudo reboot")
+
+
 def shutdown():
     # logging
-    log.debug('Shutdown device')
-    
-    os.system('sudo shutdown -h now')
-    
+    log.debug("Shutdown device")
+
+    os.system("sudo shutdown -h now")
+
+
 # get hostname
 def hostname():
     # logging
-    log.debug('Hostname: %s', platform.node())
+    log.debug("Hostname: %s", platform.node())
     return platform.node()
 
+
 def save_config(path, config):
-    with open(path + '/config.ini', 'wb') as configfile:
+    with open(path + "/config.ini", "wb") as configfile:
         config.write(configfile)
-    
+
+
 ##################################################################
 #
 # Functions to communicate with management server
 #
 ##################################################################
 
+
 # set system uptime on management server
 def set_device_uptime(mac, id):
-    url = base_url + "device_uptime/" + str(uptime()) + "/" + mac + "/" + str(id)
-    
+    url = base_url + "device/" + mac + "/" + str(id) + "/uptime"
+
     # logging
-    log.debug('Set uptime: %s', url)
-    
-    response = urllib.urlopen(url)
-    #print json.loads(response.read())
-    
-# set device state
-def set_device_state(mac, id):
-    url = base_url + "device_state/online/" + mac + "/" + str(id)
-    # logging
-    log.debug('URL to post result: %s', url)
-    
-    response = urllib.urlopen(url)
-    print(json.loads(response.read()))
-    
-# reboot system
-def set_device_reboot(id):
-    url = base_url + "device_reboot/" + str(id)
-    
-    # logging
-    log.debug('URL to post that device is rebooting: %s', url)
-    
-    response = urllib.urlopen(url)
-    #print json.loads(response.read())
-    reboot()
-    
-def set_device_shutdown(id):
-    url = base_url + "device_shutdown/" + str(id)
-    
-    # logging
-    log.debug('URL to post that device is shutingdown: %s', url)
-    
-    response = urllib.urlopen(url)
-    #print json.loads(response.read())
-    shutdown()
-    
+    log.debug("Set uptime: %s", url)
+
+    response = requests.put(url)
+    log.debug(json.loads(response.read()))
+
+
 def set_device_packages(mac, id):
     url = base_url + "device_package_data"
-    
+
     # logging
-    log.debug('URL to post device package data: %s', url)
-    
+    log.debug("URL to post device package data: %s", url)
+
     p = Packages.Packages(mac, id)
     p_result = p.get_installed_packages()
-    
-    response = requests.post(url, data=p_result, headers={'Content-Type': 'application/json'})
-    
+
+    response = requests.post(
+        url, data=p_result, headers={"Content-Type": "application/json"}
+    )
+
     # logging
-    log.debug('Response status: %s', str(response.status_code))
-    
+    log.debug("Response status: %s", str(response.status_code))
+
     result_text = response.text
-    result_text = result_text.encode('utf-8')
-    
+    result_text = result_text.encode("utf-8")
+
     # logging
-    log.debug('Response text: %s', result_text)
-    
+    log.debug("Response text: %s", result_text)
+
 
 def set_device_data(mac, id):
     # logging
-    log.debug('Collect device data')
+    log.debug("Collect device data")
     url = base_url + "device_data"
-    
+
     # logging
-    log.debug('URL to post collected data: %s', url)
-    
+    log.debug("URL to post collected data: %s", url)
+
     o = System.System.Os()
     m = System.System.Hardware.Memory()
     n = System.System.Hardware.Network()
     c = System.System.Hardware.Cpu()
-    
+
     # get all interfaces
     iface = n.interfaces()
-    
+
     # get information for interface which is not loopback
     for iface2 in iface:
         if iface2 != "lo":
-            log.debug('Network interface to collect data from: %s', iface2)
+            log.debug("Network interface to collect data from: %s", iface2)
             iface_details = n.interface_details(iface2)
-    
+
     json_data = []
-    json_data.append({'name': 'architecture', 'value': o.architecture(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'kernel_version', 'value': o.kernel_release(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'memory_total', 'value': m.total(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'memory_free', 'value': m.free(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'net_ip', 'value': iface_details[1], 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'net_speed', 'value': iface_details[0], 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'net_subnetmask', 'value': iface_details[2], 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'cpu_cores', 'value': c.physical_core_count(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'cpu_family', 'value': c.brand(), 'mac': str(mac), 'idcommand_jobs': str(id)})
-    json_data.append({'name': 'cpu_speed', 'value': c.hz_advertised(), 'mac': str(mac), 'idcommand_jobs': str(id)})
+    json_data.append(
+        {
+            "name": "architecture",
+            "value": o.architecture(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "kernel_version",
+            "value": o.kernel_release(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "memory_total",
+            "value": m.total(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "memory_free",
+            "value": m.free(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "net_ip",
+            "value": iface_details[1],
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "net_speed",
+            "value": iface_details[0],
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "net_subnetmask",
+            "value": iface_details[2],
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "cpu_cores",
+            "value": c.physical_core_count(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "cpu_family",
+            "value": c.brand(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
+    json_data.append(
+        {
+            "name": "cpu_speed",
+            "value": c.hz_advertised(),
+            "mac": str(mac),
+            "idcommand_jobs": str(id),
+        }
+    )
 
     # logging
-    log.debug('Collected device data: %s', json_data)
-    
-    response = requests.post(url, data=json.dumps(json_data), headers={'Content-Type': 'application/json'})
-    
+    log.debug("Collected device data: %s", json_data)
+
+    response = requests.post(
+        url, data=json.dumps(json_data), headers={"Content-Type": "application/json"}
+    )
+
     # logging
-    log.debug('Response status: %s', str(response.status_code))
-    
+    log.debug("Response status: %s", str(response.status_code))
+
     result_text = response.text
-    result_text = result_text.encode('utf-8')
-    
+    result_text = result_text.encode("utf-8")
+
     # logging
-    log.debug('Response text: %s', result_text)
-    
-    
-def register_device(mac, hostname):
-    url = base_url + "device_register/"+ str(mac) + "/" + hostname
-    
-    # logging
-    log.debug('Register device at management point: %s', url)
-    
-    response = urllib.urlopen(url)
-    print(json.loads(response.read()))
-    
-def get_register_state(mac):
-    url = base_url + "device_register_state/" + str(mac)
-    
-    # logging
-    log.debug('Ask api for register state: %s', url)
-    
-    # response from request
-    response = urllib.urlopen(url)
-    return json.loads(response.read())
-    
-def set_register_state(id, state):
-    url = base_url + "device_register_state/" + str(id) + "/" + state
-    
-    # logging
-    log.debug('Send response to api: %s', url)
-    
-    response = urllib.urlopen(url)
-    print(json.loads(response.read()))
-    
-if __name__ == '__main__':
+    log.debug("Response text: %s", result_text)
+
+
+if __name__ == "__main__":
 
     # setup the enviroment
     # set up configparser
@@ -214,12 +242,12 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
 
     # init logging
-    fileConfig(dir_path + '/logging_config.ini')
-    log = logging.getLogger('management-agent-it4smart')
+    fileConfig(dir_path + "/logging_config.ini")
+    log = logging.getLogger("management-agent-it4smart")
 
     # start logging
-    log.info('Start logging')
-    
+    log.info("Start logging")
+
     # get interface
     n = System.System.Hardware.Network()
 
@@ -229,40 +257,50 @@ if __name__ == '__main__':
     for iface2 in iface:
         if iface2 != "lo":
             network_interface = iface2
-            log.info('Network device found: %s', network_interface)
-            
+            log.info("Network device found: %s", network_interface)
+
     # endless loop for running as systemd service
     while True:
         # logging
-        log.info('Read settings from: %s/config.ini', dir_path)
-        
+        log.info("Read settings from: %s/config.ini", dir_path)
+
         # read config
-        config.read(dir_path + '/config.ini')
-        
+        config.read(dir_path + "/config.ini")
+
         # build base url with information from config file
-        base_url = config.get('Main', 'protocol') + "://" + config.get('Main', 'server') + "/api/v1/"
-        
+        base_url = (
+            config.get("Main", "protocol")
+            + "://"
+            + config.get("Main", "server")
+            + "/api/v1/"
+        )
+
         # logging
-        log.info('Base URL for requests is: %s', base_url)
-        
+        log.info("Base URL for requests is: %s", base_url)
+
         # wait some time
-        time.sleep(config.getfloat('Main', 'timeout'))
-        
+        time.sleep(config.getfloat("Main", "timeout"))
+
         # logging
-        log.debug('Client firstboot state: %s', config.get('Client', 'firstboot'))
-        
+        log.debug("Client firstboot state: %s", config.get("Client", "firstboot"))
+
         # only check for jobs if device is registered
-        if int(config.get('Client', 'firstboot')) == 0:
+        if int(config.get("Client", "firstboot")) == 0:
             try:
                 # logging
-                log.debug('Device is in firstboot mode')
+                log.debug("Device is in firstboot mode")
 
                 url = base_url + "device/" + getHwAddr(network_interface)
 
                 json_data = {}
-                json_data['ipAddress'] = get_ip_address(network_interface)
+                json_data["ipAddress"] = get_ip_address(network_interface)
 
-                r = requests.put(url, json=json_data, headers={'Content-Type': 'application/json'}, verify=False)
+                r = requests.put(
+                    url,
+                    json=json_data,
+                    headers={"Content-Type": "application/json"},
+                    verify=False,
+                )
 
                 if r.status_code == 200:
                     log.info("Update device information successfully.")
@@ -270,20 +308,19 @@ if __name__ == '__main__':
                 url = base_url + "device/" + getHwAddr(network_interface) + "/configure"
 
                 # logging
-                log.debug('Start configure device with request: %s', url)
-            
+                log.debug("Start configure device with request: %s", url)
+
                 r = requests.put(url, verify=False)
-                            
+
                 if r.status_code == 202:
                     data = r.json()
-            
-                    # logging
-                    log.debug('Response from requestings jobs: %s', data)
 
-                    config.set('Client', 'firstboot', '1')
-                    save_config(dir_path,config)
+                    # logging
+                    log.debug("Response from requestings jobs: %s", data)
+
+                    config.set("Client", "firstboot", "1")
+                    save_config(dir_path, config)
             except requests.exceptions.RequestException as e:
                 log.error("Error [%s]", e)
         else:
-            log.debug('Nothing to do')
-            
+            log.debug("Nothing to do")
