@@ -34,7 +34,7 @@ class TestHardware(unittest.TestCase):
 
         ipAddress = get_ip_address(network_interface)
         print("IP-Address: {}".format(ipAddress))
-        pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+        pattern = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
         pattern.fullmatch(ipAddress)
         self.assertIsNotNone(pattern)
 
