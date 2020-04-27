@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Flake8
           command: flake8 
-  build-and-test-py3.8.2:
+  build-and-test-py3-8-2:
     docker:
       - image: python:3.8.2-slim-buster
     steps:
@@ -28,5 +28,5 @@ workflows:
   main:
     jobs:
       - test-style
-      - build-and-test-py3.8.2
+      - build-and-test-py3-8-2
 
