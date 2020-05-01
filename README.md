@@ -1,4 +1,6 @@
 # Management Agent
+[![CircleCI](https://circleci.com/gh/IT4smart/ManagementCenter-Agent.svg?style=svg)](https://circleci.com/gh/IT4smart/ManagementCenter-Agent)
+
 The agent is writing in python and it is responsible for the communication with the management console.
 
 
