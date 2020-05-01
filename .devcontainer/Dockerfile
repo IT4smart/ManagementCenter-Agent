@@ -18,7 +18,7 @@ FROM debian:buster-slim
 #
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends python3-dev python3 python3-apt python3-pip python3-setuptools python3-wheel gcc git g++ libapt-pkg-dev \
+    && apt-get -y install --no-install-recommends python3-dev python3 python3-apt python3-pip python3-setuptools python3-wheel gcc git g++ libapt-pkg-dev pylint \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
