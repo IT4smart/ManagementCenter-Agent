@@ -19,17 +19,46 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: apt-get update && apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
+          command: apt-get update -qq && apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
       - python/load-cache
       - python/install-deps
       - python/save-cache
       - run:
           command: python -m unittest discover
-          name: Test
-
+          name: Test python 3.8.2 buster
+  build-and-test-py3-5-3:
+    docker:
+      - image: python:3.5.3-slim
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: apt-get update -qq && apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          command: python -m unittest discover
+          name: Test python 3.5.3
+  build-and-test-py3-7-3:
+    docker:
+      - image: python:3.7.3-slim
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: apt-get update -qq && apt-get install --no-install-recommends python3-dev gcc git g++ libapt-pkg-dev -y
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          name: Test python 3.7.3
+          command: python -m unittest discover
+    
 workflows:
   main:
     jobs:
       - test-style
       - build-and-test-py3-8-2
-
+      - build-and-test-py3-5-3
+      - build-and-test-py3-7-3

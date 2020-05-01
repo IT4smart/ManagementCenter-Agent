@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for management-agent-it4s
+# postinst script for management-agent-it4smart
 #
 # see: dh_installdeb(1)
 
@@ -7,28 +7,11 @@ set -e
 
 case "$1" in
 	configure)
-		# download package python-apt
-        # check before if files exists from package python-apt
-        if [ ! "$(ls -A /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/apt)" ] || [ ! "$(ls -A /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/aptsources)" ]
-        then
-            apt-get download -d python-apt
-            pkg=$(ls . | grep python-apt)
-
-            if [ -z "$pkg" ]; then
-                exit 1
-            else 
-                # move package to tmp folder and extract it
-                mv "$pkg" /tmp/
-                dpkg -x "/tmp/$pkg" "/tmp/python-apt"
-                mv /tmp/python-apt/usr/lib/python2.7/dist-packages/* /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/
-            fi
-        fi
-            
 		# copy default config if it doesn't exist
-        if [ ! -f "/opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini" ]
+        if [ ! -f "/opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini" ]
 	then
-            if [ -e "/opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default" ]; then
-                cp /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini.default /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/config.ini
+            if [ -e "/opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini.default" ]; then
+                cp /opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini.default /opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini
             fi
         fi
             

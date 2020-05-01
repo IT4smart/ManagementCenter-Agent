@@ -1,11 +1,11 @@
 [Unit] 
-Description=IT4S Agent 
+Description=IT4smart Agent 
 After=multi-user.target
 
 [Service]
 Restart=always
 Type=idle 
-ExecStart=/opt/IT4S/management-agent-it4s/bin/python /opt/IT4S/management-agent-it4s/lib/python2.7/site-packages/agent/Run.py
+ExecStart=/opt/IT4smart/management-agent-it4smart/bin/python /opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/Run.py
 
 [Install] 
 WantedBy=multi-user.target
