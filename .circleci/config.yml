@@ -26,7 +26,7 @@ jobs:
           command: pip3 install -r requirements.txt
       - python/save-cache
       - run:
-          command: python -m unittest discover
+          command: python3 -m unittest discover
           name: Test python 3 bullseye
   build-and-test-stretch:
     docker:
@@ -42,7 +42,7 @@ jobs:
           command: pip3 install -r requirements.txt
       - python/save-cache
       - run:
-          command: python -m unittest discover
+          command: python3 -m unittest discover
           name: Test python 3 stretch
   build-and-test-buster:
     docker:
@@ -59,7 +59,7 @@ jobs:
       - python/save-cache
       - run:
           name: Test python 3 buster
-          command: python -m unittest discover
+          command: python3 -m unittest discover
     
 workflows:
   main:
