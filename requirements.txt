@@ -5,4 +5,3 @@ psutil==4.3.1
 py-cpuinfo==0.2.3
 requests==2.23.0
 six==1.10.0
-#git+https://salsa.debian.org/apt-team/python-apt@1.8.4.1
