@@ -78,6 +78,12 @@ jobs:
       - run: 
           name: Package
           command: dpkg-buildpackage -us -uc --host-arch amd64
+      - store_artifacts:
+          path: ~/
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - repo/*
 
 workflows:
   main:
