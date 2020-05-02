@@ -63,7 +63,10 @@ jobs:
       - checkout
       - run: 
           name: Install dependencies
-          command: apt-get update -qq && apt-get install --no-install-recommends -y python3-dev python3 python3-apt python3-pip python3-setuptools python3-wheel gcc git g++ libapt-pkg-dev python3-venv dpkg-dev build-essential #debhelper dh-systemd python3 dh-virtualenv
+          command: |
+            apt-get update -qq 
+            apt-get install --no-install-recommends -y python3-dev python3 python3-apt python3-pip python3-setuptools python3-wheel gcc git g++ libapt-pkg-dev python3-venv dpkg-dev build-essential 
+          #debhelper dh-systemd python3 dh-virtualenv
       - run:
           name: Create virtualenv
           command: python3 -m venv ~/repo/venv
@@ -74,6 +77,8 @@ jobs:
           name: Install python dependencies
           command: pip3 install -r requirements.txt
       - run: 
+          name: Package
+          command: dpkg-buildpackage -us -uc --host-arch amd64
 
 workflows:
   main:
