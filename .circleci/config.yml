@@ -87,10 +87,8 @@ workflows:
       - test-bullseye
       - test-buster
       - test-stretch
-    snapshot:
-      jobs:
-        - build-debian-buster-amd64-snapshot:
-            requires:
-              - test-style
-              - test-buster
+      - build-debian-buster-amd64-snapshot:
+          requires:
+            - test-style
+            - test-buster
 
