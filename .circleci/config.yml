@@ -88,15 +88,15 @@ jobs:
   build-debian-buster-i386-snapshot:
     <<: *defaults
     docker:
-      - image: debian:buster-slim
+      - image: i386/debian:buster-slim
     steps:
       - checkout
       - run: 
           name: Install dependencies
           command: |
-            dpkg --add-architecture i386
             apt-get update -qq 
-            apt-get install --no-install-recommends -y python3-dev:i386 python3:i386 python3-apt:i386 python3-pip python3-setuptools python3-wheel gcc:i386 git:i386 g++:i386 libapt-pkg-dev:i386 python3-venv:i386 dpkg-dev build-essential:i386 debhelper dh-systemd dh-virtualenv libffi-dev:i386
+            apt-get install --no-install-recommends -y python3-dev python3 python3-apt python3-pip python3-setuptools python3-wheel gcc git g++ \
+              libapt-pkg-dev python3-venv dpkg-dev build-essential debhelper dh-systemd dh-virtualenv libffi-dev
       #- run:
       #    name: Create and activate virtualenv
       #    command: |
