@@ -127,4 +127,8 @@ workflows:
           requires:
             - test-style
             - test-buster
+      - build-debian-buster-i386-snapshot:
+          requires:
+            - test-style
+            - test-buster
 
