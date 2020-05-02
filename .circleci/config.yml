@@ -94,6 +94,7 @@ jobs:
       - run: 
           name: Install dependencies
           command: |
+            dpkg --add-architecture i386
             apt-get update -qq 
             apt-get install --no-install-recommends -y python3-dev:i386 python3:i386 python3-apt:i386 python3-pip:i386 python3-setuptools:i386 python3-wheel:i386 gcc:i386 git:i386 g++:i386 libapt-pkg-dev:i386 python3-venv:i386 dpkg-dev:i386 build-essential:i386 debhelper:i386 dh-systemd:i386 dh-virtualenv:i386 libffi-dev:i386
       #- run:
