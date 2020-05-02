@@ -28,7 +28,7 @@ That has to be changed here in the folder 'packages/management-agent'.
 Then, enter the following command in the terminal ``make <architecture>``. Currently, the following architectures are supported:
 * ARMHF (ARM HardFloat)
 * AMD64 (64-bit Architecture, not ARM 64-bit)
-* i686 (32-bit Architecture)
+* i386 (32-bit Architecture)
 
 When the chroot � environment was successfully loaded, the following command must be entered in the terminal ``export DH_VIRTUALENV_INSTALL_ROOT=/opt/IT4S``.
 
@@ -41,3 +41,15 @@ After that, the command ``dpkg-buildpackage -us -uc`` is to be entered and execu
 
 ## DEV
 You can run python linter locally with `sudo docker run --rm -v /opt/it4smart/ManagementCenter-Agent/:/data alpine/flake8 flake8 /data/agent/`
+
+## CI/CD
+Install circleci command line tool:
+```
+$ sudo snap install circleci
+
+Check syntax for errors in the config.xml file
+$ circleci config validate
+
+Run the config in a local Docker instance
+$ circleci local execute
+```
