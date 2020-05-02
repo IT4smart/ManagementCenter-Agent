@@ -1,3 +1,4 @@
+wheel==0.34.2
 debinterface==3.0.1
 freeze==1.0.10
 netifaces==0.10.5
