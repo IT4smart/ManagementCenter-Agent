@@ -234,8 +234,7 @@ def set_device_data(mac, id):
     log.debug("Response text: %s", result_text)
 
 
-if __name__ == "__main__":
-
+def main():
     # setup the enviroment
     # set up configparser
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -324,3 +323,6 @@ if __name__ == "__main__":
                 log.error("Error [%s]", e)
         else:
             log.debug("Nothing to do")
+
+if __name__ == "__main__":
+    main()
