@@ -7,6 +7,6 @@ Standards-Version: 3.9.5
 
 Package: management-agent-it4smart
 Architecture: any
-Pre-Depends: dpkg (>= 1.16.1), python3, ${misc:Pre-Depends}
+Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.5), ${misc:Pre-Depends}
 Depends: ${python3:Depends}, ${misc:Depends}
 Description: Agent to communicate with IT4smart management server (sherlock).

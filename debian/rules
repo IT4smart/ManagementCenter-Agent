@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 %:
-	dh $@ --with python-virtualenv --with systemd
+	dh $@ --with python-virtualenv --with systemd --builddirectory=build
 
 override_dh_virtualenv:
-	dh_virtualenv --python python3
+	dh_virtualenv --python python3 --use-system-packages --extra-pip-arg "--ignore-installed" --extra-pip-arg "--no-deps"

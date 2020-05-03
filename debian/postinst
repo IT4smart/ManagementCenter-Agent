@@ -8,12 +8,20 @@ set -e
 case "$1" in
 	configure)
 		# copy default config if it doesn't exist
-        if [ ! -f "/opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini" ]
-	then
-            if [ -e "/opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini.default" ]; then
-                cp /opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini.default /opt/IT4smart/management-agent-it4smart/lib/python2.7/site-packages/agent/config.ini
+
+		# Python 3.7
+        if [ ! -f "/opt/IT4smart/management-agent-it4smart/lib/python3.7/site-packages/agent/config.ini" ]; then
+            if [ -e "/opt/IT4smart/management-agent-it4smart/lib/python3.7/site-packages/agent/config.ini.default" ]; then
+                cp /opt/IT4smart/management-agent-it4smart/lib/python3.7/site-packages/agent/config.ini.default /opt/IT4smart/management-agent-it4smart/lib/python3.7/site-packages/agent/config.ini
             fi
         fi
+
+		# Python 3.5
+		if [ ! -f "/opt/IT4smart/management-agent-it4smart/lib/python3.5/site-packages/agent/config.ini" ]; then
+			if [ -e "/opt/IT4smart/management-agent-it4smart/lib/python3.5/site-packages/agent/config.ini.default" ]; then
+                cp /opt/IT4smart/management-agent-it4smart/lib/python3.5/site-packages/agent/config.ini.default /opt/IT4smart/management-agent-it4smart/lib/python3.5/site-packages/agent/config.ini
+            fi
+		fi
             
 	;;
 	

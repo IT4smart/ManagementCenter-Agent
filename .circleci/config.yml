@@ -108,8 +108,10 @@ jobs:
       - run: 
           name: Package
           command: |
+            export GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+            export GIT_COMMIT=${CIRCLE_SHA1:0:7}
             export DH_VIRTUALENV_INSTALL_ROOT=/opt/IT4smart
-            dpkg-buildpackage -us -uc --host-arch i386
+            dpkg-buildpackage -us -uc --host-arch i386 -v${GIT_TAG//v}+git-${GIT_COMMIT}
       - store_artifacts:
           path: ~/
       - persist_to_workspace:
