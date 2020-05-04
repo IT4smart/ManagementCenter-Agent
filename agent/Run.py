@@ -18,6 +18,25 @@ import logging.handlers
 from .plugins import Packages
 from .plugins import System
 
+# set up configparser
+dir_path = os.path.dirname(os.path.realpath(__file__))
+config = configparser.ConfigParser()
+
+# init logging
+fileConfig(dir_path + "/logging_config.ini")
+log = logging.getLogger("management-agent-it4smart")
+
+# read config
+config.read(dir_path + "/config.ini")
+
+# build base url with information from config file
+base_url = (
+    config.get("Main", "protocol")
+    + "://"
+    + config.get("Main", "server")
+    + "/api/v1/"
+)
+
 
 # get mac address
 def getHwAddr(ifname):
@@ -319,23 +338,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # set up configparser
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    config = configparser.ConfigParser()
-
-    # init logging
-    fileConfig(dir_path + "/logging_config.ini")
-    log = logging.getLogger("management-agent-it4smart")
-
-    # read config
-    config.read(dir_path + "/config.ini")
-
-    # build base url with information from config file
-    base_url = (
-        config.get("Main", "protocol")
-        + "://"
-        + config.get("Main", "server")
-        + "/api/v1/"
-    )
-
     main()
