@@ -15,15 +15,15 @@ from logging.config import fileConfig
 import logging.handlers
 
 # custom IT4smart packages
-from .plugins import Packages
-from .plugins import System
+from plugins import Packages
+from plugins import System
 
 # set up configparser
 dir_path = os.path.dirname(os.path.realpath(__file__))
 config = configparser.ConfigParser()
 
 # init logging
-fileConfig(dir_path + "/logging_config.ini")
+# fileConfig(dir_path + "/logging_config.ini")
 log = logging.getLogger("management-agent-it4smart")
 
 # read config
@@ -37,6 +37,20 @@ base_url = (
     + "/api/v1/"
 )
 
+def setup_logging(default_path='logging.json', default_level=logging.INFO, env_key='LOG_CFG'):
+    """
+        Setup logging configuration
+    """
+    path = default_path
+    value = os.getenv(env_key, None)
+    if value:
+        path = value
+    if os.path.exists(path):
+        with open(path, 'rt') as f:
+            config = json.load(f)
+        logging.config.dictConfig(config)
+    else:
+        logging.basicConfig(level=default_level)
 
 # get mac address
 def getHwAddr(ifname):
@@ -255,6 +269,7 @@ def set_device_data(mac, id):
 
 def main():
     # setup the enviroment
+    setup_logging(dir_path + "/logging.json")
 
     # start logging
     log.info("Start logging")

@@ -54,7 +54,8 @@ jobs:
           command: pip3 install -r requirements.txt
       - run:
           name: Test python 3 buster
-          command: python3 -m unittest discover -p "*test.py"
+          command: |
+            python3 -m unittest discover -p "*test.py"
   build-debian-buster-amd64-snapshot:
     <<: *defaults
     docker:
