@@ -25,7 +25,9 @@ jobs:
           name: Install python dependencies
           command: pip3 install -r requirements.txt
       - run:
-          command: python3 -m unittest discover -p "*test.py"
+          command: |
+            export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
+            python3 -m unittest discover -p "*test.py"
           name: Test python 3 bullseye
   test-stretch:
     docker:
@@ -39,7 +41,9 @@ jobs:
           name: Install python dependencies
           command: pip3 install -r requirements.txt
       - run:
-          command: python3 -m unittest discover -p "*test.py"
+          command: |
+            export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
+            python3 -m unittest discover -p "*test.py"
           name: Test python 3 stretch
   test-buster:
     docker:
@@ -55,6 +59,7 @@ jobs:
       - run:
           name: Test python 3 buster
           command: |
+            export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
             python3 -m unittest discover -p "*test.py"
   build-debian-buster-amd64-snapshot:
     <<: *defaults

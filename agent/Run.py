@@ -11,7 +11,6 @@ import socket
 import struct
 import configparser
 import logging
-from logging.config import fileConfig
 import logging.handlers
 
 # custom IT4smart packages
@@ -37,6 +36,7 @@ base_url = (
     + "/api/v1/"
 )
 
+
 def setup_logging(default_path='logging.json', default_level=logging.INFO, env_key='LOG_CFG'):
     """
         Setup logging configuration
@@ -51,6 +51,7 @@ def setup_logging(default_path='logging.json', default_level=logging.INFO, env_k
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=default_level)
+
 
 # get mac address
 def getHwAddr(ifname):
