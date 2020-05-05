@@ -27,6 +27,7 @@ jobs:
       - run:
           command: |
             export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
+            mv $HOME/project/agent/config.ini.default $HOME/project/agent/config.ini
             python3 -m unittest discover -p "*test.py"
           name: Test python 3 bullseye
   test-stretch:
@@ -43,6 +44,7 @@ jobs:
       - run:
           command: |
             export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
+            mv $HOME/project/agent/config.ini.default $HOME/project/agent/config.ini
             python3 -m unittest discover -p "*test.py"
           name: Test python 3 stretch
   test-buster:
@@ -60,6 +62,7 @@ jobs:
           name: Test python 3 buster
           command: |
             export PYTHONPATH=$PYTHONPATH:$HOME/project/agent
+            mv $HOME/project/agent/config.ini.default $HOME/project/agent/config.ini
             python3 -m unittest discover -p "*test.py"
   build-debian-buster-amd64-snapshot:
     <<: *defaults
