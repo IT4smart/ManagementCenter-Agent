@@ -114,6 +114,9 @@ jobs:
       #- run:
       #    name: Install python dependencies
       #    command: pip3 install -r requirements.txt
+      - run:
+          name: Create changelog
+          command: ./changelog.sh > debian/changelog
       - run: 
           name: Package
           command: |
