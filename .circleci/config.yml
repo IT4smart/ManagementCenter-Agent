@@ -116,7 +116,7 @@ jobs:
       #    command: pip3 install -r requirements.txt
       - run:
           name: Create changelog
-          command: ./changelog.sh > debian/changelog
+          command: ./changelog.sh buster 10> debian/changelog
       - run: 
           name: Package
           command: |

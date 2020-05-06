@@ -1,5 +1,18 @@
-management-agent-it4smart (0.1.0) buster; urgency=medium
+management-agent-it4smart (0.1.0~10) buster; urgency=low
+  * add dh-virtualenv support
 
-  * Initial release. (Closes: #XXXXXX)
+  * get dynamically current network interface
 
- -- administrator <administrator@del01-lsv003>  Mon, 07 Nov 2016 13:35:09 +0100
+  * fix an issue with file permission
+
+  * prepare repository to build a debian package
+
+  * remove runtime files
+
+  * remove *.pyc files from repo
+
+  * start adding support for packaging it as a debian package
+
+  * first commit
+
+ -- IT4smart GmbH <support@it4smart.eu> Wed, 16 Nov 2016 15:29:40 +0100
